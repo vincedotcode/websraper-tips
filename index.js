@@ -3,7 +3,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const { scrapeTable } = require('./scraper');
 const { sendEmail } = require('./email');
-
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
