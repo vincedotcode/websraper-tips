@@ -2,9 +2,11 @@ const express = require('express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const { scrapeTable } = require('./scraper');
+const { sendEmail } = require('./email');
+
 
 const app = express();
-
+app.use(express.json());
 // Swagger configuration
 const swaggerOptions = {
   definition: {
@@ -48,5 +50,48 @@ app.get('/scrape', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+/**
+ * @swagger
+ * /send-email:
+ *   post:
+ *     summary: Send an email with contact form data
+ *     description: Send an email with contact form data to the specified email address
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               mobile:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Email sent successfully
+ *       500:
+ *         description: Error sending email
+ */
+app.post('/send-email', async (req, res) => {
+  try {
+    const result = await sendEmail(req.body);
+
+    if (result) {
+      res.status(200).send('Email sent successfully');
+    } else {
+      res.status(500).send('Error sending email');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error sending email');
+  }
+});
+
+
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
