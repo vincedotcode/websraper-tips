@@ -1,25 +1,26 @@
-const sgMail = require('@sendgrid/mail');
+const SibApiV3Sdk = require('sendinblue-api');
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+let defaultClient = SibApiV3Sdk.ApiClient.instance;
+let apiKey = defaultClient.authentications['api-key'];
+apiKey.apiKey = process.env.BREVO_API_KEY;
+
+let apiInstance = new SibApiV3Sdk.SMTPApi();
 
 async function sendEmail(data) {
   const { name, email, mobile, message } = data;
 
-  try {
-    const mailOptions = {
-      to: 'betgramorg@gmail.com',
-      from: 'erkadoovince@gmail.com', // Replace this with your own email
-      subject: 'New Contact Form Submission',
-      text: `Name: ${name}\nEmail: ${email}\nMobile: ${mobile}\nMessage: ${message}`,
-    };
+  let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+  sendSmtpEmail.to = [{ email: 'betgramorg@gmail.com' }];
+  sendSmtpEmail.sender = { email: 'erkadoovince@gmail.com' };
+  sendSmtpEmail.subject = 'New Contact Form Submission';
+  sendSmtpEmail.textContent = `Name: ${name}\nEmail: ${email}\nMobile: ${mobile}\nMessage: ${message}`;
 
-    const result = await sgMail.send(mailOptions);
+  try {
+    const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
     return result;
   } catch (error) {
     console.error('Error sending email:', error);
   }
 }
-
-
 
 module.exports = { sendEmail };
