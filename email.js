@@ -1,10 +1,11 @@
-const SibApiV3Sdk = require('sib-api-v3-sdk');
+var SibApiV3Sdk = require('sib-api-v3-sdk');
+var defaultClient = SibApiV3Sdk.ApiClient.instance;
 
-let defaultClient = SibApiV3Sdk.ApiClient.instance;
-let apiKey = defaultClient.authentications['api-key'];
+// Configure API key authorization: api-key
+var apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 
-let apiInstance = new SibApiV3Sdk.SMTPApi();
+var apiInstance = new SibApiV3Sdk.SMTPApi();
 
 async function sendEmail(data) {
   const { name, email, mobile, message } = data;
