@@ -1,4 +1,4 @@
-const SibApiV3Sdk = require('sendinblue-api');
+const SibApiV3Sdk = require('sib-api-v3-sdk');
 
 let defaultClient = SibApiV3Sdk.ApiClient.instance;
 let apiKey = defaultClient.authentications['api-key'];
