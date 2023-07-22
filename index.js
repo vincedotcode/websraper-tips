@@ -4,6 +4,7 @@ const swaggerUi = require('swagger-ui-express');
 const { scrapeTable } = require('./scraper');
 const { sendEmail } = require('./email');
 const cors = require('cors');
+const { scrapeVitibet } = require('./scrapev2');
 
 const app = express();
 app.use(express.json());
@@ -49,6 +50,46 @@ app.get('/scrape', async (req, res) => {
     res.json(tableData);
   } else {
     res.status(500).json({ error: 'Failed to scrape the table data' });
+  }
+});
+
+/**
+ * @swagger
+ * /scrape-vitibet:
+ *   get:
+ *     summary: Scrape the table data from the vitibet website
+ *     description: Scrape the table data from the vitibet website and return it as JSON
+ *     responses:
+ *       200:
+ *         description: Successfully scraped data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   date:
+ *                     type: string
+ *                   homeTeam:
+ *                     type: string
+ *                   awayTeam:
+ *                     type: string
+ *                   prediction:
+ *                     type: string
+ *                   odds1:
+ *                     type: number
+ *                   oddsX:
+ *                     type: number
+ *                   odds2:
+ *                     type: number
+ */
+app.get('/scrape-vitibet', async (req, res) => {
+  const data = await scrapeVitibet();
+  if (data) {
+      res.json(data);
+  } else {
+      res.status(500).json({ error: 'Failed to scrape the vitibet data' });
   }
 });
 
